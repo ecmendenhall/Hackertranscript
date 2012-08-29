@@ -105,7 +105,7 @@ class FinishSignUp(SignInHandler):
             u = User.register(self.username, self.password, self.email)
             u.put()
 
-            #self.login(u)
+            self.login(u)
             self.redirect('/')
 
 
