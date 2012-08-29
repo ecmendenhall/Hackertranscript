@@ -1,0 +1,45 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="/static/css/edit.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.css">
+    </head>
+    <body>
+        <header>
+            <h1>
+            <form method="post">
+            <input name="name" value="{{ name or '' }}" placeholder="Your name"></input>
+            </h1>
+            <ul class="contact">
+                <li><input name="twitter" value="{{ twitter or '' }}" placeholder="@Twitter"></input></li>
+                <li><input name="github" value="{{ github or '' }}" placeholder="Github username"></input></li>
+                <li><input name="website" value="{{ website or '' }}" placeholder="Personal site URL"></input></li>
+            </ul>
+            <strong>Click to enable sections. Drag to rearrange.</strong>
+            <ul class="nav">
+                <li><a href="">Projects</a></li>
+                <li><a href="">Courses</a></li>
+                <li><a href="">Books</a></li>
+                <li><a href="">Online</a></li>
+                <li><a href="">Open Source</a></li>
+                <li><a href="">Meatspace</a></li>
+            </ul>
+            <strong>Style options</strong>
+            <ul>
+                <li>Link color:<input name="linkcolor" value="{{ linkcolor or '' }}" placeholder="#FF0000"></input></li>
+                <li>Sidebar color:<input name="sidebarcolor" value="{{ sidebarcolor or '' }}" placeholder="#FF0000"></input></li>
+                <li>Header color:<input name="headercolor" value="{{ headercolor or '' }}" placeholder="#FF0000"></input></li>
+                <li>Header font:<input name="headerfont" value="{{ headerfont or '' }}" placeholder="Helvetica Neue"></input></li>
+                <li>Body font:<input name="bodyfont" value="{{ bodyfont or '' }}" placeholder="Helvetica Neue"</input></li>
+            </ul>
+            <button type="submit"><i class="icon-ok"></i> Save</button>
+            </form>
+            <button><i class="icon-remove"></i> Cancel</button>
+        </header>
+        <div class="container">
+        </div>
+            <footer>
+            </footer>
+        </div>
+    </body>
+</html>
+

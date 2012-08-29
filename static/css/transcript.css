@@ -87,3 +87,25 @@ header h1 {
 a {
     color: red;
 }
+
+.btn {
+    font-size: 20px;
+    margin: 5px 0px;
+    padding: 8px;
+    color: #000;
+}
+
+.btn i {
+    color: red;
+}
+
+.big {
+    font-size: 150%;
+    font-weight: 800;
+
+}
+
+.big i {
+    font-size: 150%;
+    vertical-align: 1px;
+}

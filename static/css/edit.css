@@ -118,3 +118,18 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+button {
+    font-size: 20px;
+    margin: 5px 0px;
+    padding: 8px;
+}
+
+header button {
+    width: 100%;
+}
+
+button i {
+    color: red;
+}
+
