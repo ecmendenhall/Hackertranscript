@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <link rel="stylesheet" href="/static/css/main.css">
+    </head>
+    <body>
+        <header>
+            <h1>
+            <a>Hacker Transcript</a>
+            </h1>
+            <strong>This is a tagline.</strong>
+            <ul class="signup">
+                <li>
+                    <input form="confirm" type="text" name="username" placeholder="Username" value="{{ username }}"></input>
+                    {{ username_error }}
+                </li>
+                <li>
+                    <input form="confirm" name="password" type="password" placeholder="Password" value="{{ password }}"></input>
+                    {{ password_error }}
+                </li>
+                <li><button type="submit" formaction="signin" disabled>Sign in</button> 
+                    <button type="submit" formaction="signup" disabled>Sign up</button>
+                <li><a class="btn-auth btn-twitter">Sign in with Twitter</a></li>
+                <li><a class="btn-auth btn-github">Sign in with Github</a></li>                
+            </ul>
+                    </header>
+        <div class="container">
+            <div class="category">
+                <div class="category-header">
+                <h2>Almost done...</h2>
+                </div>
+                <div class="content">
+                <form method="post" id="confirm">
+                <ul class="signup">
+                    <li>
+                        <input type="text" name="email" placeholder="Email" value="{{ email }}"></input>
+                        {{ email_error }}
+                    </li>
+                    <li>
+                        <input type="password" name="verify" placeholder="Confirm password"></input>
+                        {{ verify_error }}
+                    </li>
+                    <li><button type="submit" formaction="finish">Finish</button></li>
+                </form>            
+            </div>
+        </div>
+        <footer>
+        </footer>
+        </div>
+    </body>
+</html>

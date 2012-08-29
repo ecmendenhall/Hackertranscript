@@ -1,0 +1,89 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0px;
+}
+
+header {
+    background-color: white;
+    width: 202px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    padding-right: 20px;
+    padding-left: 20px;
+    border-right: 1px solid #000;
+}
+
+header h1 {
+    color: #000;
+}
+
+.nav a {
+    text-decoration: none;
+    background-color: #ddd;
+    border: 1px solid #000;
+    padding: 4px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.nav li {
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+
+.container {
+    margin-left: 243px;
+    position: relative;
+}
+
+.content {
+    padding: 0px 20px;
+    margin-top: -10px;
+}
+
+.content h2 {
+    float: left;
+}
+
+.content h3 {
+    float: right;
+}
+
+.content p {
+    clear: both;
+}
+
+.category {
+    border-bottom: 1px solid #000;
+}
+
+.category-header {
+    border-bottom: 1px solid #000;
+    padding: 0px 20px;
+    margin-top: 10px;
+}
+
+.books {
+    clear: left;
+}
+
+.online h2 {
+    float: none;
+}
+
+.online h3 {
+    float: none;
+}
+
+a {
+    color: red;
+}
