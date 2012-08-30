@@ -121,7 +121,7 @@ a:hover {
 
 button {
     font-size: 20px;
-    margin: 5px 0px;
+    margin: 5px 5px;
     padding: 8px;
 }
 
@@ -132,4 +132,3 @@ header button {
 button i {
     color: red;
 }
-

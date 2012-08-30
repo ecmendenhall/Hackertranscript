@@ -51,24 +51,16 @@ class User(db.Model):
 class TranscriptItem(db.Model):
     title = db.StringProperty(required=True)
     link = db.LinkProperty()
-    date = db.DateProperty(required=True)
+    date = db.DateProperty()
     content = db.TextProperty()
     owner = db.ReferenceProperty(User)
+    category = db.CategoryProperty(choices=['project', 'course', 'book', 'opensource', 'meatspace'])
 
-class Project(TranscriptItem):
-    pass
-
-class Course(TranscriptItem):
-    pass
-
-class Book(TranscriptItem):
-    pass
-
-class OpenSource(TranscriptItem):
-    pass
-
-class Online(TranscriptItem):
-    pass
+    @classmethod
+    def by_username(cls, username):
+        u = User.all().filter('username =', username).get()
+        i = TranscriptItem.all().filter('owner =', u.key()).run()
+        return i
     
 class Settings(db.Model):
     link_color = db.StringProperty()
@@ -76,6 +68,12 @@ class Settings(db.Model):
     header_color = db.StringProperty()
     header_font = db.StringProperty()
     body_font = db.StringProperty()
+    projects = db.BooleanProperty(default=False)
+    courses = db.BooleanProperty(default=False)
+    books = db.BooleanProperty(default=False)
+    online = db.BooleanProperty(default=False)
+    open_source = db.BooleanProperty(default=False)
+    meatspace = db.BooleanProperty(default=False)
     user = db.ReferenceProperty(User, required=True)
 
     @classmethod

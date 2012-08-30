@@ -16,12 +16,12 @@
             </ul>
             <strong>Click to enable sections. Drag to rearrange.</strong>
             <ul class="nav">
-                <li><a href="">Projects</a></li>
-                <li><a href="">Courses</a></li>
-                <li><a href="">Books</a></li>
-                <li><a href="">Online</a></li>
-                <li><a href="">Open Source</a></li>
-                <li><a href="">Meatspace</a></li>
+                <li><input name="projects" type="checkbox" {{ projects|check }}><a href="">Projects</a></li>
+                <li><input name="courses" type="checkbox" {{ courses|check }}><a href="">Courses</a></li>
+                <li><input name="books" type="checkbox" {{ books|check }}><a href="">Books</a></li>
+                <li><input name="online" type="checkbox" {{ online|check }}><a href="">Online</a></li>
+                <li><input name="opensource" type="checkbox" {{ opensource|check }}><a href="">Open Source</a></li>
+                <li><input name="meatspace" type="checkbox" {{ meatspace|check }}><a href="">Meatspace</a></li>
             </ul>
             <strong>Style options</strong>
             <ul>
@@ -31,14 +31,206 @@
                 <li>Header font:<input name="headerfont" value="{{ headerfont or '' }}" placeholder="Helvetica Neue"></input></li>
                 <li>Body font:<input name="bodyfont" value="{{ bodyfont or '' }}" placeholder="Helvetica Neue"</input></li>
             </ul>
-            <button type="submit"><i class="icon-ok"></i> Save</button>
+            <button type="submit"><i class="icon-ok"></i> Save settings</button>
             </form>
             <button><i class="icon-remove"></i> Cancel</button>
         </header>
         <div class="container">
+            {% if projects %}
+            <div class="category">
+                <div class="category-header">
+                    <h1>
+                        <a class="delete" href=""><i class="icon-remove"></i></a>
+                        Projects
+                    </h1>
+                </div>
+                {% if newitem == 'project' %}
+                <div class="content">
+                    <form method="post">
+                    <h2>
+                        <input name="itemname" placeholder="Project Name"></input>
+                    </h2>
+                    <h3>
+                        <input name="itemdate" placeholder="Project Date"></input>
+                    </h3>
+                    <p>
+                    <textarea name="itemdesc" rows="5" cols="90" placeholder="Project Description"></textarea>
+                    </p>
+                    <p class="big">
+                    <a href="/{{ username }}/edit"><i class="icon-remove"></i> Cancel</a>
+                    <button class="save" href=""><i class="icon-ok"></i> Save</a>
+                    </p>
+                    </form>
+                </div>
+                {% endif %}               
+                <div class="content">
+                    <h2>
+                        <a class="new" href="/{{ username }}/new/project"><i class="icon-plus"></i> Add Project</a>
+                    </h2>
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+            {% endif %}
+            {% if courses %}
+            <div class="category">
+                <div class="category-header">
+                    <h1>
+                        <a class="delete" href=""><i class="icon-remove"></i></a>
+                        Courses
+                    </h1>
+                </div>
+                {% if newitem == 'course' %}
+                <div class="content">
+                    <form method="post">
+                    <h2>
+                        <input placeholder="Project Name"></input>
+                    </h2>
+                    <h3>
+                        <input placeholder="Project Date"></input>
+                    </h3>
+                    <p>
+                    <textarea rows="5" cols="90" placeholder="Project Description"></textarea>
+                    </p>
+                    <p class="big">
+                    <button class="cancel" formmethod="get" formaction="/{{ username }}/edit"><i class="icon-remove"></i> Cancel</a>
+                    <button class="save" href=""><i class="icon-ok"></i> Save</a>
+                    </p>
+                    </form>
+                </div>
+                {% endif %}
+                <div class="content">
+                    <h2>
+                        <a class="new" href=""><i class="icon-plus"></i> Add Course</a>
+                    </h2>
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+            {% endif %}
+            {% if books %}
+            <div class="category">
+                <div class="category-header">
+                    <h1>
+                        <a class="delete" href=""><i class="icon-remove"></i></a>
+                        Books
+                    </h1>
+                </div>
+                {% if newitem == 'book' %}
+                <div class="content">
+                    <form method="post">
+                    <h2>
+                        <input placeholder="Project Name"></input>
+                    </h2>
+                    <h3>
+                        <input placeholder="Project Date"></input>
+                    </h3>
+                    <p>
+                    <textarea rows="5" cols="90" placeholder="Project Description"></textarea>
+                    </p>
+                    <p class="big">
+                    <button class="cancel" formmethod="get" formaction="/{{ username }}/edit"><i class="icon-remove"></i> Cancel</a>
+                    <button class="save" href=""><i class="icon-ok"></i> Save</a>
+                    </p>
+                    </form>
+                </div>
+                {% endif %}
+                <div class="content books">
+                    <h2>
+                        <a class="new" href=""><i class="icon-plus"></i> Add Book</a>
+                    </h2>
+                </div>
+                <div class="content books">
+                </div>
+            </div>
+            {% endif %}
+            {% if online %}
+            <div class="category">
+                <div class="category-header">
+                    <h1>
+                        <a class="delete" href=""><i class="icon-remove"></i></a>
+                        Online
+                    </h1>
+                </div>
+                <div class="content online">
+                </div>
+            </div>
+            {% endif %}
+            {% if opensource %}
+            <div class="category">
+                <div class="category-header">
+                    <h1>
+                        <a class="delete" href=""><i class="icon-remove"></i></a>
+                        Open Source
+                    </h1>
+                </div>
+                {% if newitem == 'opensource' %}
+                <div class="content">
+                    <form method="post">
+                    <h2>
+                        <input placeholder="Project Name"></input>
+                    </h2>
+                    <h3>
+                        <input placeholder="Project Date"></input>
+                    </h3>
+                    <p>
+                    <textarea rows="5" cols="90" placeholder="Project Description"></textarea>
+                    </p>
+                    <p class="big">
+                    <button class="cancel" formmethod="get" formaction="/{{ username }}/edit"><i class="icon-remove"></i> Cancel</a>
+                    <button class="save" href=""><i class="icon-ok"></i> Save</a>
+                    </p>
+                    </form>
+                </div>
+                {% endif %}
+                <div class="content">
+                    <h2>
+                    <a class="new" href=""><i class="icon-plus"></i> Add Project</a>
+                    </h2>
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+            {% endif %}
+            {% if meatspace %}
+            <div class="category">
+                <div class="category-header">
+                    <h1>
+                        <a class="delete" href=""><i class="icon-remove"></i></a>
+                        Meatspace
+                    </h1>
+                </div>
+                {% if newitem == 'meatspace' %}
+                <div class="content">
+                    <form method="post">
+                    <h2>
+                        <input name="itemname" placeholder="Project Name"></input>
+                    </h2>
+                    <h3>
+                        <input name="itemdate" placeholder="Project Date"></input>
+                    </h3>
+                    <p>
+                    <textarea name="itemdescription" rows="5" cols="90" placeholder="Project Description"></textarea>
+                    </p>
+                    <p class="big">
+                    <button class="cancel" formmethod="get" formtarget="/{{ username }}/edit"><i class="icon-remove"></i> Cancel</a>
+                    <button class="save" href=""><i class="icon-ok"></i> Save</a>
+                    </p>
+                    </form>
+                </div>
+                {% endif %}
+                <div class="content">
+                    <h2>
+                    <a class="new" href=""><i class="icon-plus"></i> Add Project</a>
+                    </h2>
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+            {% endif %}
         </div>
-            <footer>
-            </footer>
+        <footer>
+        </footer>
         </div>
     </body>
 </html>

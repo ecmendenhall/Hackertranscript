@@ -22,72 +22,88 @@
             <a class="btn" href="/{{ username }}/edit"><i class="icon-edit"></i> Edit</a>
         </header>
         <div class="container">
+            {% if projects %}
             <div class="category">
                 <div class="category-header">
-                    <h1>Projects</h1>
+                    <h1>
+                        Projects
+                    </h1>
                 </div>
+                {% if items %}               
+                {% for item in items if item.category == 'project' %}
                 <div class="content">
-                    <h2><a href="">Kicksaver</a></h2>
-                    <h3>March 2012</h3>
-                    <p>Find and save Kickstarter projects ending soon.</p>
+                    <h2><a href="">{{ item.title }}</a></h2>
+                    <h3>Date</h3>
+                    <p>
+                    {{ item.content|markdown|safe }}
+                    </p>
                 </div>
+                {% endfor %}
+                {% endif %}
                 <div class="content">
-                    <h2><a href="">DaveDaveFind</a><h2>
-                    <h3>February 2012</h3>
-                    <p>A search engine based on the Udacity CS101 web crawler.</p>
                 </div>
             </div>
+            {% endif %}
+            {% if courses %}
             <div class="category">
                 <div class="category-header">
-                    <h1>Courses</h1>
+                    <h1>
+                        Courses
+                    </h1>
                 </div>
                 <div class="content">
-                    <h2><a href="">Udacity CS101: Building a Web Crawler</a></h2>
-                    <h3>November 2011</h3>
-                    <p>Instructor: David Evans</p>
-                    <p>Certificate of Highest Distinction</p>
-                </div>
-                <div class="content">
-                    <h2><a href="">Udacity CS212: Design of Computer Programs</a></h2>
-                    <h3>January 2011</h3>
-                    <p>Instructor: Peter Norvig</p>
-                    <p>Certificate of Highest Distinction</p>
                 </div>
             </div>
+            {% endif %}
+            {% if books %}
             <div class="category">
                 <div class="category-header">
-                    <h1>Books</h1>
+                    <h1>
+                        Books
+                    </h1>
                 </div>
                 <div class="content books">
-                    <h2><a href="">Cocoa Programming for Mac OS X</a></h2>
-                    <h3>March 2012</h3>
-                </div>
-                <div class="content books">
-                    <h2><a href="">Objective-C Programming: The Big Nerd Ranch Guide</a></h2>
-                    <h3>March 2012</h3>
-                </div>
-                <div class="content books">
-                    <h2><a href="">Learn Python The Hard Way</a></h2>
-                    <h3>October 2011</h3>
                 </div>
                 <div class="content books">
                 </div>
             </div>
+            {% endif %}
+            {% if online %}
             <div class="category">
                 <div class="category-header">
-                    <h1>Online</h1>
+                    <h1>
+                        Online
+                    </h1>
                 </div>
                 <div class="content online">
-                    <h2><a href="">StackOverflow Reputation</a></h2>
-                    <h3>27</h3>
-                </div>
-                <div class="content online">
-                    <h2><a href="">Gitscore</a></h2>
-                    <h3>299</h3>
                 </div>
             </div>
-            <footer>
-            </footer>
+            {% endif %}
+            {% if opensource %}
+            <div class="category">
+                <div class="category-header">
+                    <h1>
+                        Open Source
+                    </h1>
+                </div>
+                <div class="content">
+                </div>
+            </div>
+            {% endif %}
+            {% if meatspace %}
+            <div class="category">
+                <div class="category-header">
+                    <h1>
+                        Meatspace
+                    </h1>
+                </div>
+                <div class="content">
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <footer>
+        </footer>
         </div>
     </body>
 </html>

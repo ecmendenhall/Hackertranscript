@@ -2,10 +2,12 @@
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib/bcrypt"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "lib/markdown"))
 
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
-from models import User, Settings
+from models import User, Settings, TranscriptItem
+import markdown
 import jinja2
 import webapp2
 import os
@@ -14,7 +16,18 @@ import re
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                autoescape = True)
+def check(bool):
+    if bool:
+        return 'checked'
+    else:
+        return ''
 
+jinja_env.filters['check'] = check
+
+def render_markdown(string):
+    return markdown.markdown(string)
+
+jinja_env.filters['markdown'] = render_markdown
 
 class CustomHandler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -121,7 +134,8 @@ class Edit(CustomHandler):
             self.response.out.write('404 Not Found')
 
         else:
-            params = { 'name': u.name,
+            params = { 'username': username,
+                       'name': u.name,
                        'twitter': u.twitter,
                        'github': u.github,
                        'website': u.website }
@@ -132,7 +146,13 @@ class Edit(CustomHandler):
                 params['sidebarcolor'] = s.sidebar_color
                 params['headercolor'] = s.header_color
                 params['headerfont'] = s.header_font
-                params['bodyfont'] = s.body_font 
+                params['bodyfont'] = s.body_font
+                params['projects'] = s.projects
+                params['courses'] = s.courses
+                params['books'] = s.books
+                params['online'] = s.online
+                params['opensource'] = s.open_source
+                params['meatspace'] = s.meatspace
 
             self.render('edit.html', **params)
 
@@ -154,6 +174,13 @@ class Edit(CustomHandler):
         self.headercolor = self.request.get('headercolor')
         self.headerfont = self.request.get('headerfont')
         self.bodyfont = self.request.get('bodyfont')
+        self.projects = bool(self.request.get('projects'))
+        self.courses = bool(self.request.get('courses'))
+        self.books = bool(self.request.get('books'))
+        self.online = bool(self.request.get('online'))
+        self.opensource = bool(self.request.get('opensource'))
+        self.meatspace = bool(self.request.get('meatspace'))
+
         
         s = Settings.by_username(username)
         s.link_color = self.linkcolor
@@ -161,13 +188,15 @@ class Edit(CustomHandler):
         s.header_color = self.headercolor
         s.header_font = self.headerfont
         s.body_font = self.bodyfont
+        s.projects = self.projects
+        s.courses = self.courses
+        s.books = self.books
+        s.online = self.online
+        s.open_source = self.opensource
+        s.meatspace = self.meatspace
         s.put()
-
-
         
-        self.redirect('/' + username)
-
-      
+        self.redirect('/' + username)      
 
 class Transcript(CustomHandler):
     def get(self, username):
@@ -178,18 +207,76 @@ class Transcript(CustomHandler):
             self.response.out.write('404 Not Found')
 
         else:
+            
+            i = TranscriptItem.by_username(username)
+            s = Settings.by_username(username)
             params = { 'username': u.username,
                        'name': u.name,
                        'twitter': u.twitter,
                        'github': u.github,
-                       'website': u.website }
+                       'website': u.website,
+                       'projects': s.projects,
+                       'courses': s.courses,
+                       'books': s.books,
+                       'online': s.online,
+                       'opensource': s.open_source,
+                       'meatspace': s.meatspace,
+                       'items': i }
             self.render('transcript.html', **params)
 
+class NewItem(CustomHandler):
+    def get(self, username, transcript_item):
+        if transcript_item not in ['project', 'course', 'book', 'opensource', 'meatspace']:
+            self.response.out.write('404 not found')
+        
+        else:    
+            #Check if user exists
+            u = User.by_name(username)
+            if not u:
+                self.response.out.write('404 Not Found')
+
+            else:
+                params = { 'username': username,
+                           'newitem': transcript_item,
+                           'name': u.name,
+                           'twitter': u.twitter,
+                           'github': u.github,
+                           'website': u.website }
+                
+                s = Settings.by_username(username)
+                if s:
+                    params['linkcolor'] = s.link_color
+                    params['sidebarcolor'] = s.sidebar_color
+                    params['headercolor'] = s.header_color
+                    params['headerfont'] = s.header_font
+                    params['bodyfont'] = s.body_font
+                    params['projects'] = s.projects
+                    params['courses'] = s.courses
+                    params['books'] = s.books
+                    params['online'] = s.online
+                    params['opensource'] = s.open_source
+                    params['meatspace'] = s.meatspace
+
+                self.render('edit.html', **params)
+    
+    def post(self, username, transcript_item):
+        self.itemname = self.request.get('itemname')
+        self.itemdate = self.request.get('itemdate')
+        self.itemdesc = self.request.get('itemdesc')
+
+        k = User.by_name(username).key()
+        i = TranscriptItem(title=self.itemname, content=self.itemdesc, category=transcript_item, owner=k)
+        i.put()
+        
+        self.redirect('/' + username)
+        
+            
 
 app = webapp2.WSGIApplication([webapp2.Route('/', Main),
                                webapp2.Route('/signin', SignIn),
                                webapp2.Route('/signup', SignUp),
                                webapp2.Route('/finish', FinishSignUp),
                                webapp2.Route('/<username>', Transcript),
-                               webapp2.Route('/<username>/edit', Edit)],
+                               webapp2.Route('/<username>/edit', Edit),
+                               webapp2.Route('/<username>/new/<transcript_item>', NewItem)],
                               debug=True)
