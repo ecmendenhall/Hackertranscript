@@ -30,7 +30,8 @@
                     </h1>
                 </div>
                 {% if items %}               
-                {% for item in items if item.category == 'project' %}
+                {% for item in items %}
+                {% if item.category == 'project' %}
                 <div class="content">
                     <h2><a href="">{{ item.title }}</a></h2>
                     <h3>Date</h3>
@@ -38,6 +39,7 @@
                     {{ item.content|markdown|safe }}
                     </p>
                 </div>
+                {% endif %}
                 {% endfor %}
                 {% endif %}
                 <div class="content">
@@ -51,21 +53,43 @@
                         Courses
                     </h1>
                 </div>
+                {% if items %}
+                {% for item in items %}
+                {% if item.category == 'course' %}
                 <div class="content">
+                    <h2><a href="">{{ item.title }}</a></h2>
+                    <h3>Date</h3>
+                    <p>
+                    {{ item.content|markdown|safe }}
+                    </p>
                 </div>
-            </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
             {% endif %}
             {% if books %}
+            </div>
             <div class="category">
                 <div class="category-header">
                     <h1>
                         Books
                     </h1>
                 </div>
+                {% if items %}
+                {% for item in items %}
+                {% if item.category == 'book' %}
                 <div class="content books">
+                    <h2><a href="">{{ item.title }}</a></h2>
+                    <h3>Date</h3>
+                    <p>
+                    {{ item.content|markdown|safe }}
+                    </p>
                 </div>
                 <div class="content books">
                 </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
             </div>
             {% endif %}
             {% if online %}
@@ -86,8 +110,21 @@
                         Open Source
                     </h1>
                 </div>
+                {% if items %}
+                {% for item in items %}
+                {% if item.category == 'opensource' %}
                 <div class="content">
+                    <h2><a href="">{{ item.title }}</a></h2>
+                    <h3>Date</h3>
+                    <p>
+                    {{ item.content|markdown|safe }}
+                    </p>
                 </div>
+                <div class="content books">
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
             </div>
             {% endif %}
             {% if meatspace %}
@@ -97,7 +134,19 @@
                         Meatspace
                     </h1>
                 </div>
+                {% if items %}
+                {% for item in items %}
+                {% if item.category == 'meatspace' %}
                 <div class="content">
+                    <h2><a href="">{{ item.title }}</a></h2>
+                    <h3>Date</h3>
+                    <p>
+                    {{ item.content|markdown|safe }}
+                    </p>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
                 </div>
             </div>
             {% endif %}

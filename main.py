@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "lib/bcrypt"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "lib/markdown"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
 
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
@@ -126,37 +125,35 @@ class FinishSignUp(SignInHandler):
 
 
 class Edit(CustomHandler):
-    def get(self, username):
-
+    def add_user_info(self, params, username):
         #Check if user exists
         u = User.by_name(username)
         if not u:
             self.response.out.write('404 Not Found')
 
         else:
-            params = { 'username': username,
-                       'name': u.name,
-                       'twitter': u.twitter,
-                       'github': u.github,
-                       'website': u.website }
-            
-            s = Settings.by_username(username)
-            if s:
-                params['linkcolor'] = s.link_color
-                params['sidebarcolor'] = s.sidebar_color
-                params['headercolor'] = s.header_color
-                params['headerfont'] = s.header_font
-                params['bodyfont'] = s.body_font
-                params['projects'] = s.projects
-                params['courses'] = s.courses
-                params['books'] = s.books
-                params['online'] = s.online
-                params['opensource'] = s.open_source
-                params['meatspace'] = s.meatspace
+            params['username'] = username
+            params['name'] = u.name
+            params['twitter'] = u.twitter
+            params['github'] = u.github
+            params['website'] = u.website 
 
-            self.render('edit.html', **params)
+    def add_settings(self, params, username):
+        s = Settings.by_username(username)
+        if s:
+            params['linkcolor'] = s.link_color
+            params['sidebarcolor'] = s.sidebar_color
+            params['headercolor'] = s.header_color
+            params['headerfont'] = s.header_font
+            params['bodyfont'] = s.body_font
+            params['projects'] = s.projects
+            params['courses'] = s.courses
+            params['books'] = s.books
+            params['online'] = s.online
+            params['opensource'] = s.open_source
+            params['meatspace'] = s.meatspace
 
-    def post(self, username):
+    def save_user_info(self, username):
         self.name = self.request.get('name')
         self.twitter = self.request.get('twitter')
         self.github = self.request.get('github')
@@ -168,7 +165,8 @@ class Edit(CustomHandler):
         u.github = self.github
         u.website = self.website
         u.put()
-
+    
+    def save_settings(self, username):
         self.linkcolor = self.request.get('linkcolor')
         self.sidebarcolor = self.request.get('sidebarcolor')
         self.headercolor = self.request.get('headercolor')
@@ -195,8 +193,19 @@ class Edit(CustomHandler):
         s.open_source = self.opensource
         s.meatspace = self.meatspace
         s.put()
-        
-        self.redirect('/' + username)      
+
+    def get(self, username):
+        params = {}
+        self.add_user_info(params, username)
+        self.add_settings(params, username)
+        i = TranscriptItem.by_username(username)
+        params['items'] = list(i)
+        self.render('edit.html', **params)
+
+    def post(self, username):
+        self.save_user_info(username)
+        self.save_settings(username)
+        self.redirect('/' + username + '/edit/')      
 
 class Transcript(CustomHandler):
     def get(self, username):
@@ -207,8 +216,8 @@ class Transcript(CustomHandler):
             self.response.out.write('404 Not Found')
 
         else:
-            
             i = TranscriptItem.by_username(username)
+            
             s = Settings.by_username(username)
             params = { 'username': u.username,
                        'name': u.name,
@@ -221,54 +230,46 @@ class Transcript(CustomHandler):
                        'online': s.online,
                        'opensource': s.open_source,
                        'meatspace': s.meatspace,
-                       'items': i }
+                       'items': list(i) }
             self.render('transcript.html', **params)
 
-class NewItem(CustomHandler):
+class NewItem(Edit):
     def get(self, username, transcript_item):
         if transcript_item not in ['project', 'course', 'book', 'opensource', 'meatspace']:
             self.response.out.write('404 not found')
         
-        else:    
-            #Check if user exists
-            u = User.by_name(username)
-            if not u:
-                self.response.out.write('404 Not Found')
-
-            else:
-                params = { 'username': username,
-                           'newitem': transcript_item,
-                           'name': u.name,
-                           'twitter': u.twitter,
-                           'github': u.github,
-                           'website': u.website }
-                
-                s = Settings.by_username(username)
-                if s:
-                    params['linkcolor'] = s.link_color
-                    params['sidebarcolor'] = s.sidebar_color
-                    params['headercolor'] = s.header_color
-                    params['headerfont'] = s.header_font
-                    params['bodyfont'] = s.body_font
-                    params['projects'] = s.projects
-                    params['courses'] = s.courses
-                    params['books'] = s.books
-                    params['online'] = s.online
-                    params['opensource'] = s.open_source
-                    params['meatspace'] = s.meatspace
-
-                self.render('edit.html', **params)
+        else:
+            params = {}
+            self.add_user_info(params, username)
+            self.add_settings(params, username)
+            i = TranscriptItem.by_username(username)
+            params['items'] = list(i)
+            params['newitem'] = transcript_item    
+            self.render('edit.html', **params)
     
     def post(self, username, transcript_item):
+        error = False
         self.itemname = self.request.get('itemname')
         self.itemdate = self.request.get('itemdate')
         self.itemdesc = self.request.get('itemdesc')
-
-        k = User.by_name(username).key()
-        i = TranscriptItem(title=self.itemname, content=self.itemdesc, category=transcript_item, owner=k)
-        i.put()
         
-        self.redirect('/' + username)
+        if not self.itemname:
+            error = True
+            params = {}
+            self.add_user_info(params, username)
+            self.add_settings(params, username)
+            params['newitem'] = transcript_item
+            params['title_error'] = 'A title is required.'
+            self.render('edit.html', **params)
+        
+        
+        else:
+            k = User.by_name(username).key()
+            i = TranscriptItem(title=self.itemname, content=self.itemdesc, 
+                               category=transcript_item, owner=k)
+            i.put()
+            
+            self.redirect('/' + username)
         
             
 
